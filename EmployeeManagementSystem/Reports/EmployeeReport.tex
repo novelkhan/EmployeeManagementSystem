@@ -1,0 +1,33 @@
+﻿\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+% Adding Bengali font support using Noto Serif Bengali
+\usepackage{fontspec}
+\setmainfont{Noto Serif Bengali}
+
+% Defining table and document structure
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{কর্মচারী রিপোর্ট}} \\
+    \vspace{0.5cm}
+\end{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+    \hline
+    \textbf{ID} & \textbf{নাম} & \textbf{বিভাগ} & \textbf{বেতন} & \textbf{যোগদানের তারিখ} \\ \hline
+    1 & মোহাম্মদ আলী & এইচআর & 50000.00 & 15/01/2023 \\ \hline
+    2 & রহিমা খাতুন & আইটি & 60000.00 & 20/06/2022 \\ \hline
+    3 & কামাল হোসেন & ফিনান্স & 55000.00 & 10/09/2021 \\ \hline
+\end{tabular}
+
+\vspace{1cm}
+
+\begin{center}
+    জেনারেটেড হয়েছে: \today\ \currenttime
+\end{center}
+
+\end{document}
