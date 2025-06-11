@@ -26,12 +26,8 @@
 
 	<ItemGroup>
 		<Folder Include="Reports\" />
+		<Folder Include="wwwroot\fonts\" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Content Update="wwwroot\fonts\Ekusher-Alo.ttf">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
 
 </Project>

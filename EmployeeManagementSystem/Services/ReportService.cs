@@ -47,55 +47,46 @@ namespace EmployeeManagementSystem.Services
                 PdfWriter.GetInstance(document, ms);
                 document.Open();
 
-                string fontPath = Path.Combine(_environment.WebRootPath, "fonts", "Ekusher-Alo.ttf");
-                if (!File.Exists(fontPath))
-                {
-                    Console.WriteLine($"Font file not found at: {fontPath}");
-                    throw new FileNotFoundException("Font file not found.", fontPath);
-                }
-
-                // Try loading the font with additional debugging
-                BaseFont bf;
-                try
-                {
-                    bf = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    Console.WriteLine($"Font loaded successfully from: {fontPath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loading font from {fontPath}: {ex.Message}");
-                    throw;
-                }
-
+                // Use default Helvetica font for English
+                BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 Font font = new Font(bf, 12);
                 Font headerFont = new Font(bf, 12, Font.BOLD);
 
-                Paragraph title = new Paragraph("কর্মচারী রিপোর্ট", new Font(bf, 20, Font.BOLD));
+                Paragraph title = new Paragraph("Employee Report", new Font(bf, 20, Font.BOLD)); // Corrected spelling
                 title.Alignment = Element.ALIGN_CENTER;
                 document.Add(title);
+                document.Add(new Paragraph("\n\n")); // Add two line breaks to move table down
 
                 PdfPTable table = new PdfPTable(5);
                 table.WidthPercentage = 100;
                 table.SetWidths(new float[] { 1f, 3f, 3f, 2f, 2f });
+                table.DefaultCell.Padding = 10; // Add padding to cells
+                table.HeaderRows = 1; // Ensure header row is distinct
 
-                table.AddCell(new PdfPCell(new Phrase("ID", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER });
-                table.AddCell(new PdfPCell(new Phrase("নাম", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER });
-                table.AddCell(new PdfPCell(new Phrase("বিভাগ", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER });
-                table.AddCell(new PdfPCell(new Phrase("বেতন", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER });
-                table.AddCell(new PdfPCell(new Phrase("যোগদানের তারিখ", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER });
+                table.AddCell(new PdfPCell(new Phrase("ID", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                table.AddCell(new PdfPCell(new Phrase("Name", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                table.AddCell(new PdfPCell(new Phrase("Department", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                table.AddCell(new PdfPCell(new Phrase("Salary", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                table.AddCell(new PdfPCell(new Phrase("Joining Date", headerFont)) { BackgroundColor = new BaseColor(242, 242, 242), HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    table.AddCell(new PdfPCell(new Phrase(row["Id"].ToString(), font)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                    table.AddCell(new PdfPCell(new Phrase(row["Name"].ToString(), font)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                    table.AddCell(new PdfPCell(new Phrase(row["Department"].ToString(), font)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                    table.AddCell(new PdfPCell(new Phrase(row["Salary"].ToString(), font)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                    table.AddCell(new PdfPCell(new Phrase(Convert.ToDateTime(row["JoiningDate"]).ToString("dd/MM/yyyy"), font)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                    string id = row["Id"].ToString();
+                    string name = row["Name"].ToString();
+                    string dept = row["Department"].ToString();
+                    string salary = row["Salary"].ToString() + " USD";
+                    string joinDate = Convert.ToDateTime(row["JoiningDate"]).ToString("dd/MM/yyyy");
+
+                    table.AddCell(new PdfPCell(new Phrase(id, font)) { HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                    table.AddCell(new PdfPCell(new Phrase(name, font)) { HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                    table.AddCell(new PdfPCell(new Phrase(dept, font)) { HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                    table.AddCell(new PdfPCell(new Phrase(salary, font)) { HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
+                    table.AddCell(new PdfPCell(new Phrase(joinDate, font)) { HorizontalAlignment = Element.ALIGN_CENTER, Padding = 10 });
                 }
 
                 document.Add(table);
 
-                Paragraph footer = new Paragraph($"জেনারেটেড হয়েছে: {DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")}", font);
+                Paragraph footer = new Paragraph($"Generated on: {DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")}", font);
                 footer.Alignment = Element.ALIGN_CENTER;
                 document.Add(footer);
 
